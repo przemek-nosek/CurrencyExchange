@@ -15,7 +15,7 @@ import java.util.List;
 public class TableInfo {
     private String table;
     private String no;
-    private LocalDate tableDate;
+    private LocalDate tradingDate;
     private LocalDate effectiveDate;
-    private List<ExchangeRate> exchangeRates;
+    private List<ExchangeRate> rates;
 }
