@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * Rest controller class used to communicate between client and server.
- */
 
 @RestController
 @RequiredArgsConstructor

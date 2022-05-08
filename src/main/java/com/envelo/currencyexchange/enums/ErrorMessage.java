@@ -2,6 +2,10 @@ package com.envelo.currencyexchange.enums;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Enum that contains various error messages that can happen while using this application.
+ */
+
 @RequiredArgsConstructor
 public enum ErrorMessage {
     EXTERNAL_API_CALL_UNAVAILABLE("There was an error while trying to fetch data from: ");
