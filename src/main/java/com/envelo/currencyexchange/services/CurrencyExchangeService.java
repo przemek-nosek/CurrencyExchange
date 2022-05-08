@@ -1,21 +1,19 @@
 package com.envelo.currencyexchange.services;
 
 import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.envelo.currencyexchange.model.dto.AvailableCurrencyDto;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-@Slf4j
-public class CurrencyExchangeService {
+/**
+ * Interface used to do business logic.
+ */
+public interface CurrencyExchangeService {
 
-    private final CurrencyExchangeClient currencyExchangeClient;
-
-    public List<ExchangeRate> exchangeRates () {
-        return currencyExchangeClient.getAvailableCurrencies();
-    }
+    /**
+     * Method used to call {@link CurrencyExchangeClient} method to get available currencies.
+     *
+     * @return list of AvailableCurrencyDto
+     */
+    List<AvailableCurrencyDto> getAvailableCurrencies();
 }

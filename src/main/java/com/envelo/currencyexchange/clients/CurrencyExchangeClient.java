@@ -14,6 +14,5 @@ public interface CurrencyExchangeClient {
      *
      * @return List of ExchangeRate
      */
-
     List<ExchangeRate> getAvailableCurrencies();
 }
