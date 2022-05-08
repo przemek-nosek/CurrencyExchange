@@ -15,4 +15,12 @@ public interface CurrencyExchangeClient {
      * @return List of ExchangeRate
      */
     List<ExchangeRate> getAvailableCurrencies();
+
+    /**
+     * Method used to get current exchange rate.
+     *
+     * @param currency to get exchange rate for
+     * @return ExchangeRate class with fetched data
+     */
+    ExchangeRate getCurrentExchangeRateForCurrency(String currency);
 }

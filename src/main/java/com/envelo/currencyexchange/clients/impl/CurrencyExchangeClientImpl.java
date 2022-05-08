@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 import static com.envelo.currencyexchange.enums.ErrorMessage.EXTERNAL_API_CALL_UNAVAILABLE;
+import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATE;
+import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATES_TABLE;
 
 /**
  * An actual implementation class of {@link CurrencyExchangeClient}
@@ -22,10 +24,10 @@ import static com.envelo.currencyexchange.enums.ErrorMessage.EXTERNAL_API_CALL_U
 public class CurrencyExchangeClientImpl implements CurrencyExchangeClient { // TODO: LOG CALL IN SYSTEM AND SAVE THEM TO DB.
 
     private final RestTemplate restTemplate;
-    private final static String CURRENCY_EXCHANGE_RATES_TABLE = "http://api.nbp.pl/api/exchangerates/tables/c?format=json";
+
 
     /**
-     * <p>Returns a ist of{@link ExchangeRate}</p>
+     * <p>Returns a list of{@link ExchangeRate}</p>
      * <p>
      * Method used to connect to external API to fetch available currencies and it's exchange rates.
      * API call returns table consisting table info and it's exchange rates.
@@ -42,5 +44,22 @@ public class CurrencyExchangeClientImpl implements CurrencyExchangeClient { // T
         }
 
         return tableInfo[0].getRates();
+    }
+
+    /**
+     * Returns {@link ExchangeRate}
+     * Method used to get current exchange rate for given currency
+     * @param currency to get exchange rate for
+     * @return ExchangeRate for given currency
+     */
+    @Override
+    public ExchangeRate getCurrentExchangeRateForCurrency(String currency) {
+        TableInfo tableInfo = restTemplate.getForObject(CURRENCY_EXCHANGE_RATE, TableInfo.class, currency);
+
+        if (tableInfo == null) {
+            throw new ExternalApiCallException(EXTERNAL_API_CALL_UNAVAILABLE.getErrorMessage(CURRENCY_EXCHANGE_RATE));
+        }
+
+        return tableInfo.getRates().get(0);
     }
 }

@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.envelo.currencyexchange.enums.ErrorMessage.EXTERNAL_API_CALL_UNAVAILABLE;
+import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATE;
+import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATES_TABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
@@ -30,12 +32,11 @@ class CurrencyExchangeClientImplTest {
     @InjectMocks
     private CurrencyExchangeClientImpl currencyExchangeClient;
 
-    private final static String CURRENCY_EXCHANGE_RATES_TABLE = "http://api.nbp.pl/api/exchangerates/tables/c?format=json";
 
     @Test
-    void getAvailableCurrencies_shouldReturnExchangeRates_whenTableInfoIsNotNullOrEmpty() {
+    void getAvailableCurrencies_shouldReturnExchangeRateList_whenTableInfoIsNotNullOrEmpty() {
         //given
-        ExchangeRate actualExchangeRate = new ExchangeRate("currency", "code", BigDecimal.TEN, BigDecimal.ONE);
+        ExchangeRate actualExchangeRate = new ExchangeRate("currency", "code", BigDecimal.TEN);
         TableInfo tableInfo = new TableInfo(
                 "table",
                 "no",
@@ -55,8 +56,7 @@ class CurrencyExchangeClientImplTest {
         ExchangeRate expectedExchangeRate = availableCurrencies.get(0);
         assertThat(expectedExchangeRate.getCurrency()).isEqualTo(actualExchangeRate.getCurrency());
         assertThat(expectedExchangeRate.getCode()).isEqualTo(actualExchangeRate.getCode());
-        assertThat(expectedExchangeRate.getBid()).isEqualTo(actualExchangeRate.getBid());
-        assertThat(expectedExchangeRate.getAsk()).isEqualTo(actualExchangeRate.getAsk());
+        assertThat(expectedExchangeRate.getMid()).isEqualTo(actualExchangeRate.getMid());
     }
 
     @Test
@@ -81,5 +81,29 @@ class CurrencyExchangeClientImplTest {
         assertThatThrownBy(() -> currencyExchangeClient.getAvailableCurrencies())
                 .isInstanceOf(ExternalApiCallException.class)
                 .hasMessage(EXTERNAL_API_CALL_UNAVAILABLE.getErrorMessage(CURRENCY_EXCHANGE_RATES_TABLE));
+    }
+
+    @Test
+    void getCurrentExchangeRateForCurrency_shouldReturnExchange_whenTableInfoIsNotNull() {
+        //given
+        String code = "code";
+        ExchangeRate actualExchangeRate = new ExchangeRate("currency", code, BigDecimal.TEN);
+        TableInfo tableInfo = new TableInfo(
+                "table",
+                "no",
+                LocalDate.now(),
+                LocalDate.now(),
+                List.of(actualExchangeRate));
+
+        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATE, TableInfo.class, code)).willReturn(tableInfo);
+
+        //when
+        ExchangeRate expectedExchangeRate = currencyExchangeClient.getCurrentExchangeRateForCurrency(code);
+
+        //then
+        then(restTemplate).should().getForObject(CURRENCY_EXCHANGE_RATE, TableInfo.class, code);
+        assertThat(expectedExchangeRate.getCurrency()).isEqualTo(actualExchangeRate.getCurrency());
+        assertThat(expectedExchangeRate.getCode()).isEqualTo(actualExchangeRate.getCode());
+        assertThat(expectedExchangeRate.getMid()).isEqualTo(actualExchangeRate.getMid());
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TableInfo {
-    private String table;
+    private String table;// TODO: JSON PROPERTY
     private String no;
     private LocalDate tradingDate;
     private LocalDate effectiveDate;

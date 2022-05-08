@@ -18,7 +18,7 @@ class CurrencyExchangeMapperTest {
     @Test
     void exchangeRateToAvailableCurrencyDto_shouldReturnAvailableCurrencyDto_whenGivenExchangeRate() {
         //given
-        ExchangeRate exchangeRate = new ExchangeRate("polskie złote", "PLN", BigDecimal.TEN, BigDecimal.ONE);
+        ExchangeRate exchangeRate = new ExchangeRate("polskie złote", "PLN", BigDecimal.TEN);
 
         //when
         List<AvailableCurrencyDto> availableCurrencyDtos = currencyExchangeMapper.exchangeRateListToAvailableCurrencyDtoList(List.of(exchangeRate));
