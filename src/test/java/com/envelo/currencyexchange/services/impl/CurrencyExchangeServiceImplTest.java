@@ -4,9 +4,7 @@ import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
 import com.envelo.currencyexchange.model.dto.CurrencyDto;
 import com.envelo.currencyexchange.model.dto.ExchangeCurrencyFromToDto;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
-import com.envelo.currencyexchange.model.entities.SystemLog;
 import com.envelo.currencyexchange.model.mappers.CurrencyExchangeMapper;
-import com.envelo.currencyexchange.repositories.SystemLogRepository;
 import com.envelo.currencyexchange.validators.CurrencyValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,14 +34,14 @@ class CurrencyExchangeServiceImplTest {
     private CurrencyValidator currencyValidator;
 
     @Mock
-    private SystemLogRepository systemLogRepository;
+    private SystemLogServiceImpl systemLogService;
 
     @InjectMocks
     private CurrencyExchangeServiceImpl currencyExchangeServiceImpl;
 
     @BeforeEach
     void setUp() {
-        given(systemLogRepository.save(any())).willReturn(new SystemLog());
+        willDoNothing().given(systemLogService).saveLog(anyString(), anyString());
     }
 
     @Test
@@ -63,9 +61,6 @@ class CurrencyExchangeServiceImplTest {
     @Test
     void calculateCurrencyExchangeAmount_shouldCalculateExchangeAmount_whenCurrenciesAreValid() {
         //given
-        given(currencyExchangeClient.getAvailableCurrencies()).willReturn(new ArrayList<>());
-        willDoNothing().given(currencyValidator).validateGivenCurrencies(anyList(), anyList());
-
         ExchangeRateDto fromCurrency = new ExchangeRateDto("dolar amerykanski", "USD", BigDecimal.TEN);
         ExchangeRateDto toCurrency = new ExchangeRateDto("dolar australijski", "AUD", BigDecimal.ONE);
         given(currencyExchangeClient.getCurrentExchangeRateForCurrency(any())).willReturn(fromCurrency, toCurrency);

@@ -4,8 +4,7 @@ import com.envelo.currencyexchange.exceptions.ExternalApiCallException;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import com.envelo.currencyexchange.model.dto.TableInfoDto;
 import com.envelo.currencyexchange.model.dto.TableInfoForOneCurrencyDto;
-import com.envelo.currencyexchange.model.entities.SystemLog;
-import com.envelo.currencyexchange.repositories.SystemLogRepository;
+import com.envelo.currencyexchange.services.impl.SystemLogServiceImpl;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,16 +16,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.envelo.currencyexchange.enums.ErrorMessage.EXTERNAL_API_CALL_UNAVAILABLE;
+import static com.envelo.currencyexchange.model.enums.ErrorMessage.EXTERNAL_API_CALL_UNAVAILABLE;
 import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATE;
 import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATES_TABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CurrencyExchangeClientImplTest {
@@ -35,14 +33,14 @@ class CurrencyExchangeClientImplTest {
     private RestTemplate restTemplate;
 
     @Mock
-    private SystemLogRepository systemLogRepository;
+    private SystemLogServiceImpl systemLogService;
 
     @InjectMocks
     private CurrencyExchangeClientImpl currencyExchangeClient;
 
     @BeforeEach
     void setUp() {
-        given(systemLogRepository.save(any())).willReturn(new SystemLog());
+        willDoNothing().given(systemLogService).saveLog(anyString(), anyString());
     }
 
     @Test
@@ -71,29 +69,6 @@ class CurrencyExchangeClientImplTest {
         assertThat(expectedExchangeRateDto.getMid()).isEqualTo(actualExchangeRateDto.getMid());
     }
 
-    @Test
-    void getAvailableCurrencies_shouldThrowExternalApiCallException_whenTableInfoIsNull() {
-        //given
-        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class)).willReturn(null);
-
-        //when
-        //then
-        assertThatThrownBy(() -> currencyExchangeClient.getAvailableCurrencies())
-                .isInstanceOf(ExternalApiCallException.class)
-                .hasMessage(EXTERNAL_API_CALL_UNAVAILABLE.getErrorMessage(CURRENCY_EXCHANGE_RATES_TABLE));
-    }
-
-    @Test
-    void getAvailableCurrencies_shouldThrowExternalApiCallException_whenTableInfoIsEmpty() {
-        //given
-        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class)).willReturn(new TableInfoDto[]{});
-
-        //when
-        //then
-        assertThatThrownBy(() -> currencyExchangeClient.getAvailableCurrencies())
-                .isInstanceOf(ExternalApiCallException.class)
-                .hasMessage(EXTERNAL_API_CALL_UNAVAILABLE.getErrorMessage(CURRENCY_EXCHANGE_RATES_TABLE));
-    }
 
     @Test
     void getCurrentExchangeRateForCurrency_shouldReturnExchange_whenTableInfoIsNotNull() {

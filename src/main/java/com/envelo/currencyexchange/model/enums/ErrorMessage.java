@@ -1,4 +1,4 @@
-package com.envelo.currencyexchange.enums;
+package com.envelo.currencyexchange.model.enums;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,5 +16,9 @@ public enum ErrorMessage {
 
     public String getErrorMessage(String key) {
         return this.message + key;
+    }
+
+    public String getErrorMessage() {
+        return this.message;
     }
 }

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "system_logs")
@@ -19,7 +18,6 @@ public class SystemLog {
     private long id;
 
     private LocalDateTime timeStamp;
-    private String className;
-    @Column(length = 2000)
-    private String method;
+    private String source;
+    private String description;
 }
