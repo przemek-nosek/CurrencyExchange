@@ -82,7 +82,7 @@ public class CurrencyExchangeController {
     })
     @GetMapping("/{currencyCodes}")
     public List<CurrencyDto> getCurrentRatesForCurrencies(
-            @PathVariable @Parameter(description = EXCHANGE_RATES_FOR_CURRENCY_CODES) List<@NotBlank @Size(min = 3, max = 3)String> currencyCodes
+            @PathVariable @Parameter(description = EXCHANGE_RATES_FOR_CURRENCY_CODES) List<String> currencyCodes
     ) {
 
         List<String> currencyCodesDistinct = currencyCodes.stream()

@@ -1,6 +1,7 @@
 package com.envelo.currencyexchange.services.impl;
 
 import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
+import com.envelo.currencyexchange.model.dto.CurrencyDto;
 import com.envelo.currencyexchange.model.dto.ExchangeCurrencyFromToDto;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import com.envelo.currencyexchange.model.mappers.CurrencyExchangeMapper;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -66,5 +68,23 @@ class CurrencyExchangeServiceImplTest {
         assertThat(exchangeCurrencyFromToDto.getToCurrencyCode()).isEqualTo(toCurrency.getCode());
         assertThat(exchangeCurrencyFromToDto.getAmountToCalculate()).isEqualTo(BigDecimal.TEN);
         assertThat(exchangeCurrencyFromToDto.getCalculatedAmount()).isEqualTo(new BigDecimal("100.000"));
+    }
+
+    @Test
+    void getCurrentRatesForCurrencies_shouldReturnCurrencyDtoList_whenApiCallWasSuccessful() {
+        //given
+        given(currencyExchangeClient.getAvailableCurrencies()).willReturn(List.of(
+                new ExchangeRateDto("currency1", "code1", BigDecimal.TEN),
+                new ExchangeRateDto("currency2", "code2", BigDecimal.ONE)
+        ));
+        willDoNothing().given(currencyValidator).validateGivenCurrencies(anyList(), anyList());
+
+
+        //when
+        List<CurrencyDto> currencyDtoList = currencyExchangeServiceImpl.getCurrentRatesForCurrencies(List.of("code1"));
+
+        //then
+        assertThat(currencyDtoList).isNotEmpty();
+        then(currencyExchangeClient).should().getAvailableCurrencies();
     }
 }
