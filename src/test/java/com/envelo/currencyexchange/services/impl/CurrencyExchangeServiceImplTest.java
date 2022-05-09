@@ -4,8 +4,11 @@ import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
 import com.envelo.currencyexchange.model.dto.CurrencyDto;
 import com.envelo.currencyexchange.model.dto.ExchangeCurrencyFromToDto;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
+import com.envelo.currencyexchange.model.entities.SystemLog;
 import com.envelo.currencyexchange.model.mappers.CurrencyExchangeMapper;
+import com.envelo.currencyexchange.repositories.SystemLogRepository;
 import com.envelo.currencyexchange.validators.CurrencyValidator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,8 +35,16 @@ class CurrencyExchangeServiceImplTest {
     @Mock
     private CurrencyValidator currencyValidator;
 
+    @Mock
+    private SystemLogRepository systemLogRepository;
+
     @InjectMocks
     private CurrencyExchangeServiceImpl currencyExchangeServiceImpl;
+
+    @BeforeEach
+    void setUp() {
+        given(systemLogRepository.save(any())).willReturn(new SystemLog());
+    }
 
     @Test
     void getAvailableCurrencies_shouldReturnAvailableCurrencyList_whenApiCallWasSuccessful() {

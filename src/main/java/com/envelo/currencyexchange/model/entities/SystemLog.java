@@ -1,15 +1,16 @@
 package com.envelo.currencyexchange.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "system_logs")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class SystemLog {
@@ -18,4 +19,7 @@ public class SystemLog {
     private long id;
 
     private LocalDateTime timeStamp;
+    private String className;
+    @Column(length = 2000)
+    private String method;
 }

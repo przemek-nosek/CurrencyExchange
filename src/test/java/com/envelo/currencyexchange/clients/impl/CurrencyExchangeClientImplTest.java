@@ -4,7 +4,10 @@ import com.envelo.currencyexchange.exceptions.ExternalApiCallException;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import com.envelo.currencyexchange.model.dto.TableInfoDto;
 import com.envelo.currencyexchange.model.dto.TableInfoForOneCurrencyDto;
+import com.envelo.currencyexchange.model.entities.SystemLog;
+import com.envelo.currencyexchange.repositories.SystemLogRepository;
 import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +24,7 @@ import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURREN
 import static com.envelo.currencyexchange.utils.CurrencyExchangeConstants.CURRENCY_EXCHANGE_RATES_TABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -30,9 +34,16 @@ class CurrencyExchangeClientImplTest {
     @Mock
     private RestTemplate restTemplate;
 
+    @Mock
+    private SystemLogRepository systemLogRepository;
+
     @InjectMocks
     private CurrencyExchangeClientImpl currencyExchangeClient;
 
+    @BeforeEach
+    void setUp() {
+        given(systemLogRepository.save(any())).willReturn(new SystemLog());
+    }
 
     @Test
     void getAvailableCurrencies_shouldReturnExchangeRateList_whenTableInfoIsNotNullOrEmpty() {

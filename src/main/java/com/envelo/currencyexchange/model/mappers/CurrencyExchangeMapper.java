@@ -18,8 +18,8 @@ public interface CurrencyExchangeMapper {
     /**
      * Method used to map object from {@link ExchangeRateDto} to {@link AvailableCurrencyDto}
      *
-     * @param exchangeRateDtos list of ExchangeRate as mapping source
+     * @param exchangeRateDtoList list of ExchangeRate as mapping source
      * @return list of AvailableCurrencyDto as mapping target
      */
-    List<AvailableCurrencyDto> exchangeRateListToAvailableCurrencyDtoList(List<ExchangeRateDto> exchangeRateDtos);
+    List<AvailableCurrencyDto> exchangeRateListToAvailableCurrencyDtoList(List<ExchangeRateDto> exchangeRateDtoList);
 }
