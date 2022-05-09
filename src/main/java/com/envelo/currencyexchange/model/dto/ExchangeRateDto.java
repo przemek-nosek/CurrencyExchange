@@ -8,13 +8,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ExchangeRateDto {
     private String currency;
     private String code;
     private BigDecimal mid;
-
-    @Override
-    public String toString() {
-        return "code = " + this.code;
-    }
 }

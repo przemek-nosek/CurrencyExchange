@@ -100,6 +100,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
      * @return list of {@link CurrencyDto} with exchange rates for requested currencies.
      */
     private List<CurrencyDto> getExchangeAmountForRequestedCurrencies(List<ExchangeRateDto> availableCurrencies, List<ExchangeRateDto> givenCurrencyCodesRates) {
+        systemLogService.saveLog(CurrencyExchangeController.class.getSimpleName(), "getExchangeAmountForRequestedCurrencies()");
 
         List<CurrencyDto> currencyDtoList = new ArrayList<>();
         CurrencyDto currencyDto;
@@ -107,8 +108,11 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
         for (ExchangeRateDto givenCurrencyCodesRate : givenCurrencyCodesRates) {
             currencyDto = new CurrencyDto(givenCurrencyCodesRate.getCurrency(), givenCurrencyCodesRate.getCode());
 
+            systemLogService.saveLog(CurrencyExchangeController.class.getSimpleName(), String.format("getExchangeAmountForRequestedCurrencies(givenCurrencyCodesRate: %s)", givenCurrencyCodesRate));
+
             for (ExchangeRateDto availableCurrency : availableCurrencies) {
                 if (!givenCurrencyCodesRate.getCurrency().equals(availableCurrency.getCurrency())) {
+
                     BigDecimal exchangeAmount = calculateExchangeAmount(givenCurrencyCodesRate.getMid(), availableCurrency.getMid(), null);
 
                     currencyDto.addExchangeRateDto(
@@ -131,9 +135,12 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
      * @return list of {@link ExchangeRateDto} for requested currencies
      */
     private List<ExchangeRateDto> getExchangeRateForRequestedCurrencies(List<String> currencyCodes, List<ExchangeRateDto> availableCurrencies) {
+        systemLogService.saveLog(CurrencyExchangeController.class.getSimpleName(), "getExchangeRateForRequestedCurrencies()");
+
         List<ExchangeRateDto> givenCurrencyCodesRates = new ArrayList<>();
 
         for (String currencyCode : currencyCodes) {
+            systemLogService.saveLog(CurrencyExchangeController.class.getSimpleName(), String.format("getExchangeRateForRequestedCurrencies(currencyCode: %s)", currencyCode));
             for (ExchangeRateDto availableCurrency : availableCurrencies) {
                 if (currencyCode.equals(availableCurrency.getCode())) {
                     givenCurrencyCodesRates.add(availableCurrency);
