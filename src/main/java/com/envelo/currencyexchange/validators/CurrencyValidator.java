@@ -1,8 +1,9 @@
 package com.envelo.currencyexchange.validators;
 
+import com.envelo.currencyexchange.controllers.CurrencyExchangeController;
 import com.envelo.currencyexchange.exceptions.InvalidCurrencyException;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
-import com.envelo.currencyexchange.repositories.SystemLogRepository;
+import com.envelo.currencyexchange.services.SystemLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ import static com.envelo.currencyexchange.model.enums.ErrorMessage.INVALID_CURRE
 @RequiredArgsConstructor
 public class CurrencyValidator {
 
-    private final SystemLogRepository systemLogRepository;
+    private final SystemLogService systemLogService;
 
     /**
      * Method validates if given currencies are valid.
@@ -34,8 +35,11 @@ public class CurrencyValidator {
                 invalidCurrencies.append(currency).append(",");
             }
         }
-        if (!invalidCurrencies.isEmpty())
-            throw new InvalidCurrencyException(INVALID_CURRENCY_EXCEPTION.getErrorMessage(invalidCurrencies.substring(0, invalidCurrencies.length() - 1)));
+        if (!invalidCurrencies.isEmpty()) {
+            String errorMessage = INVALID_CURRENCY_EXCEPTION.getErrorMessage(invalidCurrencies.substring(0, invalidCurrencies.length() - 1));
+            systemLogService.saveLog(CurrencyExchangeController.class.getSimpleName(), String.format("validateGivenCurrencies(%s )", errorMessage));
+            throw new InvalidCurrencyException(errorMessage);
+        }
     }
 
     /**

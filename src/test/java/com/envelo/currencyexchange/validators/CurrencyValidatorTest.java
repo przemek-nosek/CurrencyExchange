@@ -29,7 +29,6 @@ class CurrencyValidatorTest {
     @InjectMocks
     private CurrencyValidator currencyValidator;
 
-
     @Test
     void validateGivenCurrencies_shouldNotThrowAnything_whenCurrenciesAreValid() {
         //given
@@ -44,6 +43,7 @@ class CurrencyValidatorTest {
     @Test
     void validateGivenCurrencies_shouldThrowAnything_whenCurrenciesAreInValid() {
         //given
+        willDoNothing().given(systemLogService).saveLog(anyString(), anyString());
         ExchangeRateDto exchangeRateDto = getExchangeRate();
         String invalidCurrency = "USo";
 
