@@ -2,8 +2,9 @@ package com.envelo.currencyexchange.clients.impl;
 
 import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
 import com.envelo.currencyexchange.exceptions.ExternalApiCallException;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
-import com.envelo.currencyexchange.model.external.TableInfo;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
+import com.envelo.currencyexchange.model.dto.TableInfoDto;
+import com.envelo.currencyexchange.model.dto.TableInfoForOneCurrencyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class CurrencyExchangeClientImpl implements CurrencyExchangeClient { // T
 
 
     /**
-     * <p>Returns a list of{@link ExchangeRate}</p>
+     * <p>Returns a list of{@link ExchangeRateDto}</p>
      * <p>
      * Method used to connect to external API to fetch available currencies and it's exchange rates.
      * API call returns table consisting table info and it's exchange rates.
@@ -36,30 +37,34 @@ public class CurrencyExchangeClientImpl implements CurrencyExchangeClient { // T
      * @throws ExternalApiCallException when there was an error while connecting to the API>
      */
     @Override
-    public List<ExchangeRate> getAvailableCurrencies() {
-        TableInfo[] tableInfo = restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfo[].class);
+    public List<ExchangeRateDto> getAvailableCurrencies() {
+        TableInfoDto[] tableInfoDto = restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class);
 
-        if (tableInfo == null || tableInfo.length == 0) {
+        if (tableInfoDto == null || tableInfoDto.length == 0) {
             throw new ExternalApiCallException(EXTERNAL_API_CALL_UNAVAILABLE.getErrorMessage(CURRENCY_EXCHANGE_RATES_TABLE));
         }
 
-        return tableInfo[0].getRates();
+        return tableInfoDto[0].getRates();
     }
 
     /**
-     * Returns {@link ExchangeRate}
+     * Returns {@link ExchangeRateDto}
      * Method used to get current exchange rate for given currency
      * @param currency to get exchange rate for
      * @return ExchangeRate for given currency
+     * @throws ExternalApiCallException when there was an error while connecting to the API>
      */
     @Override
-    public ExchangeRate getCurrentExchangeRateForCurrency(String currency) {
-        TableInfo tableInfo = restTemplate.getForObject(CURRENCY_EXCHANGE_RATE, TableInfo.class, currency);
+    public ExchangeRateDto getCurrentExchangeRateForCurrency(String currency) {
+        TableInfoForOneCurrencyDto tableInfoForOneCurrencyDto = restTemplate.getForObject(CURRENCY_EXCHANGE_RATE, TableInfoForOneCurrencyDto.class, currency);
 
-        if (tableInfo == null) {
+        if (tableInfoForOneCurrencyDto == null) {
             throw new ExternalApiCallException(EXTERNAL_API_CALL_UNAVAILABLE.getErrorMessage(CURRENCY_EXCHANGE_RATE));
         }
 
-        return tableInfo.getRates().get(0);
+        ExchangeRateDto exchangeRateDto = tableInfoForOneCurrencyDto.getRates().get(0);
+        exchangeRateDto.setCurrency(tableInfoForOneCurrencyDto.getCurrency());
+        exchangeRateDto.setCode(tableInfoForOneCurrencyDto.getCode());
+        return exchangeRateDto;
     }
 }

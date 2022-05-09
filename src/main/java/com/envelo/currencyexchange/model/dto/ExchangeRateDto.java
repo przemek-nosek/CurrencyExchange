@@ -1,4 +1,4 @@
-package com.envelo.currencyexchange.model.external;
+package com.envelo.currencyexchange.model.dto;
 
 import lombok.*;
 
@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
-public class ExchangeRate {
-    private String currency; // TODO: JSON PROPERTY
+public class ExchangeRateDto {
+    private String currency;
     private String code;
     private BigDecimal mid;
 }

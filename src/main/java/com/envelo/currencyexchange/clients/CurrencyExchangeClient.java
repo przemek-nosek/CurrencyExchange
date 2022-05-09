@@ -1,6 +1,6 @@
 package com.envelo.currencyexchange.clients;
 
-import com.envelo.currencyexchange.model.external.ExchangeRate;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface CurrencyExchangeClient {
      *
      * @return List of ExchangeRate
      */
-    List<ExchangeRate> getAvailableCurrencies();
+    List<ExchangeRateDto> getAvailableCurrencies();
 
     /**
      * Method used to get current exchange rate.
@@ -22,5 +22,5 @@ public interface CurrencyExchangeClient {
      * @param currency to get exchange rate for
      * @return ExchangeRate class with fetched data
      */
-    ExchangeRate getCurrentExchangeRateForCurrency(String currency);
+    ExchangeRateDto getCurrentExchangeRateForCurrency(String currency);
 }

@@ -2,6 +2,7 @@ package com.envelo.currencyexchange.services;
 
 import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
 import com.envelo.currencyexchange.model.dto.AvailableCurrencyDto;
+import com.envelo.currencyexchange.model.dto.CurrencyDto;
 import com.envelo.currencyexchange.model.dto.ExchangeCurrencyFromToDto;
 
 import java.math.BigDecimal;
@@ -30,4 +31,6 @@ public interface CurrencyExchangeService {
      */
 
     ExchangeCurrencyFromToDto calculateCurrencyExchangeAmount(BigDecimal amount, String from, String to);
+
+    List<CurrencyDto> getCurrentRatesForCurrencies(List<String> currencyCodes);
 }

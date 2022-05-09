@@ -1,8 +1,9 @@
 package com.envelo.currencyexchange.clients.impl;
 
 import com.envelo.currencyexchange.exceptions.ExternalApiCallException;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
-import com.envelo.currencyexchange.model.external.TableInfo;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
+import com.envelo.currencyexchange.model.dto.TableInfoDto;
+import com.envelo.currencyexchange.model.dto.TableInfoForOneCurrencyDto;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,33 +37,33 @@ class CurrencyExchangeClientImplTest {
     @Test
     void getAvailableCurrencies_shouldReturnExchangeRateList_whenTableInfoIsNotNullOrEmpty() {
         //given
-        ExchangeRate actualExchangeRate = new ExchangeRate("currency", "code", BigDecimal.TEN);
-        TableInfo tableInfo = new TableInfo(
+        ExchangeRateDto actualExchangeRateDto = new ExchangeRateDto("currency", "code", BigDecimal.TEN);
+        TableInfoDto tableInfoDto = new TableInfoDto(
                 "table",
                 "no",
                 LocalDate.now(),
                 LocalDate.now(),
-                List.of(actualExchangeRate));
+                List.of(actualExchangeRateDto));
 
-        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfo[].class)).willReturn(Arrays.array(tableInfo));
+        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class)).willReturn(Arrays.array(tableInfoDto));
 
         //when
-        List<ExchangeRate> availableCurrencies = currencyExchangeClient.getAvailableCurrencies();
+        List<ExchangeRateDto> availableCurrencies = currencyExchangeClient.getAvailableCurrencies();
 
         //then
-        then(restTemplate).should().getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfo[].class);
+        then(restTemplate).should().getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class);
         assertThat(availableCurrencies).hasSize(1);
 
-        ExchangeRate expectedExchangeRate = availableCurrencies.get(0);
-        assertThat(expectedExchangeRate.getCurrency()).isEqualTo(actualExchangeRate.getCurrency());
-        assertThat(expectedExchangeRate.getCode()).isEqualTo(actualExchangeRate.getCode());
-        assertThat(expectedExchangeRate.getMid()).isEqualTo(actualExchangeRate.getMid());
+        ExchangeRateDto expectedExchangeRateDto = availableCurrencies.get(0);
+        assertThat(expectedExchangeRateDto.getCurrency()).isEqualTo(actualExchangeRateDto.getCurrency());
+        assertThat(expectedExchangeRateDto.getCode()).isEqualTo(actualExchangeRateDto.getCode());
+        assertThat(expectedExchangeRateDto.getMid()).isEqualTo(actualExchangeRateDto.getMid());
     }
 
     @Test
     void getAvailableCurrencies_shouldThrowExternalApiCallException_whenTableInfoIsNull() {
         //given
-        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfo[].class)).willReturn(null);
+        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class)).willReturn(null);
 
         //when
         //then
@@ -74,7 +75,7 @@ class CurrencyExchangeClientImplTest {
     @Test
     void getAvailableCurrencies_shouldThrowExternalApiCallException_whenTableInfoIsEmpty() {
         //given
-        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfo[].class)).willReturn(new TableInfo[]{});
+        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATES_TABLE, TableInfoDto[].class)).willReturn(new TableInfoDto[]{});
 
         //when
         //then
@@ -87,23 +88,22 @@ class CurrencyExchangeClientImplTest {
     void getCurrentExchangeRateForCurrency_shouldReturnExchange_whenTableInfoIsNotNull() {
         //given
         String code = "code";
-        ExchangeRate actualExchangeRate = new ExchangeRate("currency", code, BigDecimal.TEN);
-        TableInfo tableInfo = new TableInfo(
+        ExchangeRateDto actualExchangeRateDto = new ExchangeRateDto("currency", code, BigDecimal.TEN);
+        TableInfoForOneCurrencyDto tableInfoForOneCurrencyDto = new TableInfoForOneCurrencyDto(
                 "table",
-                "no",
-                LocalDate.now(),
-                LocalDate.now(),
-                List.of(actualExchangeRate));
+                "currency",
+                "code",
+                List.of(actualExchangeRateDto));
 
-        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATE, TableInfo.class, code)).willReturn(tableInfo);
+        given(restTemplate.getForObject(CURRENCY_EXCHANGE_RATE, TableInfoForOneCurrencyDto.class, code)).willReturn(tableInfoForOneCurrencyDto);
 
         //when
-        ExchangeRate expectedExchangeRate = currencyExchangeClient.getCurrentExchangeRateForCurrency(code);
+        ExchangeRateDto expectedExchangeRateDto = currencyExchangeClient.getCurrentExchangeRateForCurrency(code);
 
         //then
-        then(restTemplate).should().getForObject(CURRENCY_EXCHANGE_RATE, TableInfo.class, code);
-        assertThat(expectedExchangeRate.getCurrency()).isEqualTo(actualExchangeRate.getCurrency());
-        assertThat(expectedExchangeRate.getCode()).isEqualTo(actualExchangeRate.getCode());
-        assertThat(expectedExchangeRate.getMid()).isEqualTo(actualExchangeRate.getMid());
+        then(restTemplate).should().getForObject(CURRENCY_EXCHANGE_RATE, TableInfoForOneCurrencyDto.class, code);
+        assertThat(expectedExchangeRateDto.getCurrency()).isEqualTo(actualExchangeRateDto.getCurrency());
+        assertThat(expectedExchangeRateDto.getCode()).isEqualTo(actualExchangeRateDto.getCode());
+        assertThat(expectedExchangeRateDto.getMid()).isEqualTo(actualExchangeRateDto.getMid());
     }
 }

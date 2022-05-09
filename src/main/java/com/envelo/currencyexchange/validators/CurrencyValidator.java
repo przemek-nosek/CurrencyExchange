@@ -1,8 +1,7 @@
 package com.envelo.currencyexchange.validators;
 
-import com.envelo.currencyexchange.enums.ErrorMessage;
 import com.envelo.currencyexchange.exceptions.InvalidCurrencyException;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,25 +18,25 @@ public class CurrencyValidator {
      * @param currencies requested currencies
      * @throws InvalidCurrencyException throws {@link InvalidCurrencyException} when given currencies are invalid
      */
-    public void validateGivenCurrencies(List<ExchangeRate> availableCurrencies, String... currencies) {
+    public void validateGivenCurrencies(List<ExchangeRateDto> availableCurrencies, List<String> currencies) {
         List<String> currencyCodes = extractCurrencyCodes(availableCurrencies);
 
         for (String currency : currencies) {
-            if (!currencyCodes.contains(currency)) {
+            if (!currencyCodes.contains(currency.toUpperCase())) {
                 throw new InvalidCurrencyException(INVALID_CURRENCY_EXCEPTION.getErrorMessage(currency));
             }
         }
     }
 
     /**
-     * Method which extract currency codes from {@link ExchangeRate} list
+     * Method which extract currency codes from {@link ExchangeRateDto} list
      * @param availableCurrencies data fetched from api
      * @return list of extracted currency codes
      */
-    private List<String> extractCurrencyCodes(List<ExchangeRate> availableCurrencies) {
+    private List<String> extractCurrencyCodes(List<ExchangeRateDto> availableCurrencies) {
         List<String> currencyCodes = new ArrayList<>();
 
-        for (ExchangeRate availableCurrency : availableCurrencies) {
+        for (ExchangeRateDto availableCurrency : availableCurrencies) {
             currencyCodes.add(availableCurrency.getCode());
         }
 

@@ -1,4 +1,4 @@
-package com.envelo.currencyexchange.model.external;
+package com.envelo.currencyexchange.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TableInfo {
-    private String table;// TODO: JSON PROPERTY
+public class TableInfoDto {
+    private String table;
     private String no;
     private LocalDate tradingDate;
     private LocalDate effectiveDate;
-    private List<ExchangeRate> rates;
+    private List<ExchangeRateDto> rates;
 }

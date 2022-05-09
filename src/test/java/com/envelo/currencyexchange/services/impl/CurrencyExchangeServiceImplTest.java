@@ -2,7 +2,7 @@ package com.envelo.currencyexchange.services.impl;
 
 import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
 import com.envelo.currencyexchange.model.dto.ExchangeCurrencyFromToDto;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import com.envelo.currencyexchange.model.mappers.CurrencyExchangeMapper;
 import com.envelo.currencyexchange.validators.CurrencyValidator;
 import org.junit.jupiter.api.Test;
@@ -51,10 +51,10 @@ class CurrencyExchangeServiceImplTest {
     void calculateCurrencyExchangeAmount_shouldCalculateExchangeAmount_whenCurrenciesAreValid() {
         //given
         given(currencyExchangeClient.getAvailableCurrencies()).willReturn(new ArrayList<>());
-        willDoNothing().given(currencyValidator).validateGivenCurrencies(anyList(), anyString(), anyString());
+        willDoNothing().given(currencyValidator).validateGivenCurrencies(anyList(), anyList());
 
-        ExchangeRate fromCurrency = new ExchangeRate("dolar amerykanski", "USD", BigDecimal.TEN);
-        ExchangeRate toCurrency = new ExchangeRate("dolar australijski", "AUD", BigDecimal.ONE);
+        ExchangeRateDto fromCurrency = new ExchangeRateDto("dolar amerykanski", "USD", BigDecimal.TEN);
+        ExchangeRateDto toCurrency = new ExchangeRateDto("dolar australijski", "AUD", BigDecimal.ONE);
         given(currencyExchangeClient.getCurrentExchangeRateForCurrency(any())).willReturn(fromCurrency, toCurrency);
 
         //when
@@ -65,6 +65,6 @@ class CurrencyExchangeServiceImplTest {
         assertThat(exchangeCurrencyFromToDto.getFromCurrencyCode()).isEqualTo(fromCurrency.getCode());
         assertThat(exchangeCurrencyFromToDto.getToCurrencyCode()).isEqualTo(toCurrency.getCode());
         assertThat(exchangeCurrencyFromToDto.getAmountToCalculate()).isEqualTo(BigDecimal.TEN);
-        assertThat(exchangeCurrencyFromToDto.getCalculatedAmount()).isEqualTo(new BigDecimal("100.00"));
+        assertThat(exchangeCurrencyFromToDto.getCalculatedAmount()).isEqualTo(new BigDecimal("100.000"));
     }
 }

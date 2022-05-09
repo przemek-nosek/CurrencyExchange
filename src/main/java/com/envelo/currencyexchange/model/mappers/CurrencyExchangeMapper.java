@@ -1,7 +1,7 @@
 package com.envelo.currencyexchange.model.mappers;
 
 import com.envelo.currencyexchange.model.dto.AvailableCurrencyDto;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.List;
 public interface CurrencyExchangeMapper {
 
     /**
-     * Method used to map object from {@link ExchangeRate} to {@link AvailableCurrencyDto}
+     * Method used to map object from {@link ExchangeRateDto} to {@link AvailableCurrencyDto}
      *
-     * @param exchangeRates list of ExchangeRate as mapping source
+     * @param exchangeRateDtos list of ExchangeRate as mapping source
      * @return list of AvailableCurrencyDto as mapping target
      */
-    List<AvailableCurrencyDto> exchangeRateListToAvailableCurrencyDtoList(List<ExchangeRate> exchangeRates);
+    List<AvailableCurrencyDto> exchangeRateListToAvailableCurrencyDtoList(List<ExchangeRateDto> exchangeRateDtos);
 }

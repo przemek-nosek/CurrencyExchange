@@ -1,7 +1,7 @@
 package com.envelo.currencyexchange.validators;
 
 import com.envelo.currencyexchange.exceptions.InvalidCurrencyException;
-import com.envelo.currencyexchange.model.external.ExchangeRate;
+import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -18,28 +18,28 @@ class CurrencyValidatorTest {
     @Test
     void validateGivenCurrencies_shouldNotThrowAnything_whenCurrenciesAreValid() {
         //given
-        ExchangeRate exchangeRate = getExchangeRate();
+        ExchangeRateDto exchangeRateDto = getExchangeRate();
         String currency = "USD";
 
         //when
         //then
-        currencyValidator.validateGivenCurrencies(List.of(exchangeRate), currency);
+        currencyValidator.validateGivenCurrencies(List.of(exchangeRateDto), List.of(currency));
     }
 
     @Test
     void validateGivenCurrencies_shouldThrowAnything_whenCurrenciesAreInValid() {
         //given
-        ExchangeRate exchangeRate = getExchangeRate();
+        ExchangeRateDto exchangeRateDto = getExchangeRate();
         String invalidCurrency = "USo";
 
         //when
         //then
-        assertThatThrownBy(() -> currencyValidator.validateGivenCurrencies(List.of(exchangeRate), invalidCurrency))
+        assertThatThrownBy(() -> currencyValidator.validateGivenCurrencies(List.of(exchangeRateDto), List.of(invalidCurrency)))
                 .isInstanceOf(InvalidCurrencyException.class)
                 .hasMessage(INVALID_CURRENCY_EXCEPTION.getErrorMessage(invalidCurrency));
     }
 
-    private ExchangeRate getExchangeRate() {
-        return new ExchangeRate("dolar", "USD", BigDecimal.TEN);
+    private ExchangeRateDto getExchangeRate() {
+        return new ExchangeRateDto("dolar", "USD", BigDecimal.TEN);
     }
 }
