@@ -7,7 +7,6 @@ import com.envelo.currencyexchange.model.dto.CurrencyDto;
 import com.envelo.currencyexchange.model.dto.ExchangeCurrencyFromToDto;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import com.envelo.currencyexchange.model.mappers.CurrencyExchangeMapper;
-import com.envelo.currencyexchange.repositories.SystemLogRepository;
 import com.envelo.currencyexchange.services.CurrencyExchangeService;
 import com.envelo.currencyexchange.services.SystemLogService;
 import com.envelo.currencyexchange.validators.CurrencyValidator;
