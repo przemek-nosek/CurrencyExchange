@@ -2,6 +2,7 @@ package com.envelo.currencyexchange.clients.impl;
 
 import com.envelo.currencyexchange.clients.CurrencyExchangeClient;
 import com.envelo.currencyexchange.exceptions.ExternalApiCallException;
+import com.envelo.currencyexchange.exceptions.InvalidCurrencyException;
 import com.envelo.currencyexchange.model.dto.ExchangeRateDto;
 import com.envelo.currencyexchange.model.dto.TableInfoDto;
 import com.envelo.currencyexchange.model.dto.TableInfoForOneCurrencyDto;
@@ -51,7 +52,7 @@ public class CurrencyExchangeClientImpl implements CurrencyExchangeClient {
      *
      * @param currency to get exchange rate for
      * @return ExchangeRate for given currency
-     * @throws ExternalApiCallException when there was an error while connecting to the API>
+     * @throws InvalidCurrencyException when there was an error while connecting to the API>
      */
     @Override
     public ExchangeRateDto getCurrentExchangeRateForCurrency(String currency) {
@@ -62,9 +63,9 @@ public class CurrencyExchangeClientImpl implements CurrencyExchangeClient {
             exchangeRateDto.setCurrency(tableInfoForOneCurrencyDto.getCurrency());
             exchangeRateDto.setCode(tableInfoForOneCurrencyDto.getCode());
             return exchangeRateDto;
-        } catch (ExternalApiCallException ex) {
-            systemLogService.saveLog(CURRENCY_EXCHANGE_RATE, String.format("ExternalApiCallException: %s", ex.getMessage() + currency));
-            throw new ExternalApiCallException(ex.getMessage() + currency);
+        } catch (InvalidCurrencyException ex) {
+            systemLogService.saveLog(CURRENCY_EXCHANGE_RATE, String.format("InvalidCurrencyException: %s", ex.getMessage() + currency));
+            throw new InvalidCurrencyException(ex.getMessage() + currency);
         }
     }
 }
